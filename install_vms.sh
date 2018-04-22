@@ -34,7 +34,7 @@ function warn_at
     echo
 }
 
-scp config.sh on_server.sh $SERVER: && ssh $SERVER "bash on_server.sh" && \
+scp config.sh on_hypervisor.sh $SERVER: && ssh $SERVER "bash on_hypervisor.sh" && \
     info_at "images of VMs are ready on server" || \
     error_at "failed to gprepare images of VMs on server"
 
@@ -49,9 +49,11 @@ function new_instance
     virt-install \
         --connect qemu+ssh://$SERVER/system \
         --name $instance_id \
-        --vcpus 4 --memory 8096 \
+        --vcpus ${vcpucnt[$instance_id]} \
+        --memory ${memorysize[$instance_id]} \
         --network network=default,model=virtio \
         --os-type=linux --os-variant=ubuntu16.04 \
+        --virt-type kvm \
         --disk path=$this_img,bus=virtio --import \
         --disk path=$this_cidata_iso,device=cdrom \
         --noautoconsole && \

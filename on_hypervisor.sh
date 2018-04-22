@@ -5,7 +5,7 @@ set -e
 . config.sh
 
 IMG_URL=http://mirrors.ustc.edu.cn/ubuntu-cloud-images
-IMG_URL=$IMG_URL/xenial/20180410/xenial-server-cloudimg-amd64-disk1.img
+IMG_URL=$IMG_URL/xenial/current/xenial-server-cloudimg-amd64-disk1.img
 
 IMG_DIR=/raid/workspace/qemu-kvm-imgs
 IMG_BASE=$IMG_DIR/u1604cloud_base.qcow2
@@ -85,7 +85,7 @@ EOF
     genisoimage -o $this_cidata_iso -V cidata -r -J $this_cidata_dir
 
     qemu-img create -f qcow2 -b $IMG_BASE $this_img && \
-        qemu-img resize $this_img 128G && qemu-img info $this_img && \
+        qemu-img resize $this_img ${disksize[$instance_id]} && qemu-img info $this_img && \
         info_at "$this_img is created"
 }
 
